@@ -1,0 +1,60 @@
+OASISFormat:            0.4
+OCamlVersion:           >= 4.05
+Name:                   sysyf
+Version:                0.1
+Synopsis:               Experimental implementation of Sysyf.
+Description:            Experimental implementation of Sysyf. 
+Maintainers:            Steven W.T. Cheung <cwtsteven@gmail.com>
+Authors:                Steven W.T. Cheung <cwtsteven@gmail.com>
+License:                LGPL
+Homepage:               http://www.google.com 
+Plugins:                META (0.4), StdFiles (0.4), DevFiles (0.4)
+XStdFilesAUTHORS:       false
+BuildTools:             ocamlbuild
+
+PostCleanCommand: rm -rf _build/ configure *.native
+
+Flag ppx
+  Default:              true
+  Description:          Build library and ppx extension
+
+##
+## Adjacent library
+##
+Library sysyf
+  Path:                 src
+  Modules:              Sysyf
+  InternalModules:      Heteromap,
+                        Dictionary 
+##BuildDepends:         unix
+##
+## PPX extension
+##
+Library sysyf_ppx
+  Path:                 ppx
+  FindlibName:          ppx
+  FindLibParent:        sysyf
+  Install$:             flag(ppx)
+  Build$:               flag(ppx)
+  Modules:              Sysyf_ext
+  BuildDepends:         sysyf
+  XMETARequires:        sysyf
+  XMETADescription:     Syntactic extensions for Sysyf.
+  XMETAExtraLines:      ppx = "sysyf_ext" 
+
+Executable sysyf_ext
+  Path:                 ppx
+  MainIs:               sysyf_ext.ml
+  Install$:             flag(ppx)
+  Build$:               flag(ppx)
+  BuildDepends:         compiler-libs.common
+  CompiledObject:       best
+
+
+##
+## Remote source information
+##
+##SourceRepository head
+##  Type:           git
+##  Location:       https://github.com/DecML/decml-ppx.git
+##  Browser:        https://github.com/DecML/decml-ppx
